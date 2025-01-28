@@ -36,21 +36,29 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const PORT = 3000;
-const studentData = require('./data.json'); // Ensure this file exists and contains valid student data
+const studentData = require('./data.json');
 
 app.post('/students/above-threshold', (req, res) => {
+  console.log('Received request:', req.body);
   const { threshold } = req.body;
+  // console.log('Received threshold:', threshold);
 
   if (threshold === undefined || typeof threshold !== 'number') {
+    console.error('Invalid threshold:', threshold);
     return res.status(400).json({ error: 'threshold must be a number' });
   }
 
-  const filteredStudents = studentData.filter((student) => student.total > threshold);
+  const filteredStudents = studentData
+    .filter((student) => student.total > threshold)
+    .map((student) => ({ name: student.name, total: student.total }));
+
+  // console.log('Filtered students:', filteredStudents);
 
   res.json({
     count: filteredStudents.length,
     students: filteredStudents,
   });
+
 });
 
 app.listen(PORT, () => {
