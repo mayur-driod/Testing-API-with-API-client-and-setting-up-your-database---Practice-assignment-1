@@ -36,7 +36,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const PORT = 3000;
-const studentData = require('./data.json');
+const studentData = require('./data.json'); // Ensure this file exists and contains valid student data
 
 app.post('/students/above-threshold', (req, res) => {
   const { threshold } = req.body;
@@ -45,17 +45,12 @@ app.post('/students/above-threshold', (req, res) => {
     return res.status(400).json({ error: 'threshold must be a number' });
   }
 
-  const filteredStudents = studentData
-    .filter((student) => student.total > threshold)
-   
+  const filteredStudents = studentData.filter((student) => student.total > threshold);
 
   res.json({
     count: filteredStudents.length,
     students: filteredStudents,
   });
-
-  console.log({count: filteredStudents.length,
-    students: filteredStudents,})
 });
 
 app.listen(PORT, () => {
